@@ -1,0 +1,6 @@
+{
+  "env": {
+    "MONGO_ATLAS_PW": "admin",
+    "FORTNIE_KEY": "84bf0cc2b4b6be0918da79eff3a8e93b"
+  }
+}
