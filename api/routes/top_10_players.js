@@ -13,7 +13,7 @@ const Rank = require('../models/top_10_players');
  *    GET REQUEST
  *
  */
-router.get('/:username', (req, res, next) => {
+router.get('/', (req, res, next) => {
   Rank.find()
     .exec()
     .then( docs => {
