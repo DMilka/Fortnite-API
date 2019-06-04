@@ -13,8 +13,9 @@ const Rank = require('../models/top_10_players');
  *    GET REQUEST
  *
  */
-router.get('/', (req, res, next) => {
-  Rank.find()
+router.get('/:type', (req, res, next) => {
+  const type = req.params.type;
+  Rank.find({type: type})
     .exec()
     .then( docs => {
       console.log(docs);
@@ -64,12 +65,13 @@ router.get('/', (req, res, next) => {
  *  POST REQUEST
  *
  */
-router.post('/',  (req, res, next) => {
-   request('https://fortnitetracker.com/leaderboards', (err, ress, html) => {
+router.post('/all',  (req, res, next) => {
+   request('https://fortnitetracker.com/leaderboards/pc/Top1?mode=all', (err, ress, html) => {
     if(!err && ress.statusCode == 200) {
       const $ = cheerio.load(html);
       const nameTable = [];
       const top10Arr = [];
+      const today = new Date().toLocaleString();
 
       $('.trn-table').children('tbody').children('.trn-table__row').children('.trn-lb-entry__player').children('.trn-lb-entry__name').each(function (i, e)  {
         nameTable.push($(this).text());
@@ -79,37 +81,180 @@ router.post('/',  (req, res, next) => {
         top10Arr.push(nameTable[i]);
       }
 
-      const today = new Date().toLocaleString();
-
       const rank =  new Rank({
         _id: new mongoose.Types.ObjectId(),
+        type: 'all',
         rank: top10Arr,
         query_date: today
       });
 
-
-
       console.log(top10Arr);
-      rank
-      .save()
-      .then(result => {
-        console.log(result);
-        res.status(201).json({
-          message: 'Selected top 10 players',
-          rank: result
-        });
-      })
-      .catch( err => {
-        console.log(err);
+          rank
+          .save()
+          .then(result => {
+            console.log(result);
+            res.status(201).json({
+              message: 'Selected top 10 players',
+              type: 'all',
+              rank: top10Arr,
+              query_date: today
+            });
+          })
+          .catch( err => {
+            console.log(err);
 
-        res.status(500).json({
-          message: 'Top 10 players failed to search',
-          error: err
-        });
-      });
+            res.status(500).json({
+              message: 'Top 10 players failed to search',
+              error: err
+            });
+          });
+
     }
   });
 });
+
+router.post('/solo',  (req, res, next) => {
+  request('https://fortnitetracker.com/leaderboards/pc/Top1?mode=p2', (err, ress, html) => {
+   if(!err && ress.statusCode == 200) {
+     const $ = cheerio.load(html);
+     const nameTable = [];
+     const top10Arr = [];
+     const today = new Date().toLocaleString();
+
+     $('.trn-table').children('tbody').children('.trn-table__row').children('.trn-lb-entry__player').children('.trn-lb-entry__name').each(function (i, e)  {
+       nameTable.push($(this).text());
+     });
+
+     for(let i = 0; i < 10; i++){
+       top10Arr.push(nameTable[i]);
+     }
+
+     const rank =  new Rank({
+       _id: new mongoose.Types.ObjectId(),
+       type: 'solo',
+       rank: top10Arr,
+       query_date: today
+     });
+
+     console.log(top10Arr);
+         rank
+         .save()
+         .then(result => {
+           console.log(result);
+           res.status(201).json({
+            message: 'Selected top 10 players',
+            type: 'solo',
+            rank: top10Arr,
+            query_date: today
+           });
+         })
+         .catch( err => {
+           console.log(err);
+
+           res.status(500).json({
+             message: 'Top 10 players failed to search',
+             error: err
+           });
+         });
+
+   }
+ });
+});
+router.post('/squad',  (req, res, next) => {
+  request('https://fortnitetracker.com/leaderboards/pc/Top1?mode=p9', (err, ress, html) => {
+   if(!err && ress.statusCode == 200) {
+     const $ = cheerio.load(html);
+     const nameTable = [];
+     const top10Arr = [];
+     const today = new Date().toLocaleString();
+
+     $('.trn-table').children('tbody').children('.trn-table__row').children('.trn-lb-entry__player').children('.trn-lb-entry__name').each(function (i, e)  {
+       nameTable.push($(this).text());
+     });
+
+     for(let i = 0; i < 10; i++){
+       top10Arr.push(nameTable[i]);
+     }
+
+     const rank =  new Rank({
+       _id: new mongoose.Types.ObjectId(),
+       type: 'squad',
+       rank: top10Arr,
+       query_date: today
+     });
+
+     console.log(top10Arr);
+         rank
+         .save()
+         .then(result => {
+           console.log(result);
+           res.status(201).json({
+            message: 'Selected top 10 players',
+            type: 'squad',
+              rank: top10Arr,
+              query_date: today
+           });
+         })
+         .catch( err => {
+           console.log(err);
+
+           res.status(500).json({
+             message: 'Top 10 players failed to search',
+             error: err
+           });
+         });
+
+   }
+ });
+});
+router.post('/duo',  (req, res, next) => {
+  request('https://fortnitetracker.com/leaderboards/pc/Top1?mode=p10', (err, ress, html) => {
+   if(!err && ress.statusCode == 200) {
+     const $ = cheerio.load(html);
+     const nameTable = [];
+     const top10Arr = [];
+     const today = new Date().toLocaleString();
+
+     $('.trn-table').children('tbody').children('.trn-table__row').children('.trn-lb-entry__player').children('.trn-lb-entry__name').each(function (i, e)  {
+       nameTable.push($(this).text());
+     });
+
+     for(let i = 0; i < 10; i++){
+       top10Arr.push(nameTable[i]);
+     }
+
+     const rank =  new Rank({
+       _id: new mongoose.Types.ObjectId(),
+       type: 'duo',
+       rank: top10Arr,
+       query_date: today
+     });
+
+     console.log(top10Arr);
+         rank
+         .save()
+         .then(result => {
+           console.log(result);
+           res.status(201).json({
+            message: 'Selected top 10 players',
+            type: 'duo',
+            rank: top10Arr,
+            query_date: today
+           });
+         })
+         .catch( err => {
+           console.log(err);
+
+           res.status(500).json({
+             message: 'Top 10 players failed to search',
+             error: err
+           });
+         });
+
+   }
+ });
+});
+
 
 /**
  *

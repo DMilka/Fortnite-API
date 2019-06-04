@@ -13,8 +13,9 @@ const RankByCountry = require('../models/top_10_players_by_country');
  *    GET REQUEST
  *
  */
-router.get('/:country', (req, res, next) => {
+router.get('/:country/:type', (req, res, next) => {
   const countryName = req.params.country;
+  const type = req.params.type;
 
   RankByCountry.find({country: countryName})
     .exec()
