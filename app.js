@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const top10PlayersRoutes = require('./api/routes/top_10_players');
 const top10PlayersRoutesByCountry = require('./api/routes/top_10_players_by_country');
 const statisticsByNickname = require('./api/routes/statistics_by_nickname');
+const items = require('./api/routes/items');
+const item = require('./api/routes/item_detail');
 
 mongoose.connect(
   `mongodb+srv://admin:${process.env.MONGO_ATLAS_PW}@node-rest-shop-mklvh.mongodb.net/test?retryWrites=true&w=majority`,
@@ -39,6 +41,8 @@ app.use((req, res, next) => {
 app.use('/top_10_players', top10PlayersRoutes);
 app.use('/top_10_players_by_country', top10PlayersRoutesByCountry);
 app.use('/statistics_by_nickname', statisticsByNickname);
+app.use('/items', items);
+app.use('/item_detail', item);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

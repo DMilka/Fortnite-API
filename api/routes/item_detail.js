@@ -5,8 +5,6 @@ const router = express.Router();
 
 
 const Item = require('../models/item_detail');
-const Items = require('../models/items');
-
 
 /**
  *
@@ -14,7 +12,7 @@ const Items = require('../models/items');
  *
  */
 router.get('/', (req, res, next) => {
-  Items.find()
+  Item.find()
     .exec()
     .then( docs => {
       console.log(docs);
@@ -66,63 +64,57 @@ router.get('/', (req, res, next) => {
  *  POST REQUEST
  *
  */
-router.post('/', (req, res, next) => {
+router.post('/:item', (req, res, next) => {
 
+  var itemName = req.params.item;
   axios({
     method: 'get',
-    url: `https://fortnite-api.theapinetwork.com/store/get`,
+    url: `https://fortnite-api.theapinetwork.com/items/list`,
     headers: {'Authorization': "84bf0cc2b4b6be0918da79eff3a8e93b"}
   })
-  .then(result => {
-    const storeList = [];
-    result.data.data.forEach(el => {
-      let item = new Item({
-        _id: new mongoose.Types.ObjectId(),
-        itemid: el.itemId,
-        name: el.item.name,
-        price: el.store.cost,
-        type: el.item.type,
-        img: el.item.images.icon,
-      });
-      storeList.push(item);
+  .then(docs => {
+
+    docs.data.data.forEach(el => {
+      if(el.item.name == itemName) {
+        console.log(el);
+        const today = new Date().toLocaleString();
+
+        let item = new Item({
+          _id: new mongoose.Types.ObjectId(),
+          itemid: el.itemId,
+          name: el.item.name,
+          price: el.item.cost,
+          type: el.item.type,
+          img: el.item.images.icon,
+          query_date: today
+        });
+
+        item
+        .save()
+        .then(ress => {
+          console.log(res);
+          res.status(201).json({
+            message: 'Item found',
+            item: item,
+          });
+        })
+        .catch( err => {
+          console.log(err);
+
+          res.status(500).json({
+            message: 'Server problem',
+            error: err
+          });
+        } );
+      }
     })
-
-    const today = new Date().toLocaleString();
-
-    let items = new Items({
-      _id: new mongoose.Types.ObjectId(),
-      items:storeList,
-      query_date: today
-    })
-
-    
-
-    items
-    .save()
-    .then(ress => {
-      console.log(res);
-      res.status(201).json({
-        message: 'Items saved',
-        items: items,
-      });
-    })
-    .catch( err => {
-      console.log(err);
-
-      res.status(500).json({
-        message: 'Items cannot be saved',
-        error: err
-      });
-    } );
-
   })
-  .catch(e => {
-    console.log(e);
-  });
-
-  
-
-
+  .catch(ee => {
+    res.status(404).json({
+      message: 'Item not found',
+    });
+    console.log(ee);
+  })
 });
 
 
@@ -133,7 +125,7 @@ router.post('/', (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
-  Items.remove({_id: id})
+  Item.remove({_id: id})
     .exec()
     .then(result => {
       res.status(200).json(result);
