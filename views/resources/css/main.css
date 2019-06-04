@@ -1,0 +1,51 @@
+.top10-container, .items-container {
+    margin-bottom: 6em;
+    padding: 3em;
+
+    background: #EEE;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.items-container .thumbnail {
+    width: 15%;
+}
+
+.items-container .thumbnail img {
+    width: 80%;
+
+    background: #DDD;
+    border-radius: 1000px;
+}
+
+.items-container .name, .items-container .type {
+    text-transform : capitalize
+}
+
+.items-container .name {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.items-container .price {
+    color: rgb(18, 98, 228);
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.player-stats {
+    width: 30%;
+}
+
+.player-stats table th {
+    color: #DDD;
+}
+
+.player-stats table td {
+    color: #FFF;
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
