@@ -17,7 +17,7 @@ router.get('/:country/:type', (req, res, next) => {
   const countryName = req.params.country;
   const type = req.params.type;
 
-  RankByCountry.find({country: countryName})
+  RankByCountry.find({country: countryName, type: type})
     .exec()
     .then( docs => {
       console.log(docs);
@@ -60,10 +60,30 @@ router.get('/:country/:type', (req, res, next) => {
  *  POST REQUEST
  *
  */
-router.post('/:country',  (req, res, next) => {
+router.post('/:country/:type',  (req, res, next) => {
   const country = req.params.country;
+  const type = req.params.type;
+  let mode = 'all';
 
-   request(`https://fortnitetracker.com/leaderboards/pc/Top1?mode=all&country=${country}`, (err, ress, html) => {
+  // console.log(req.params);
+
+  if(type === 'all') {
+    mode = 'all'
+  } else if( type === 'solo') {
+    mode = 'p2';
+  } else if(type === ' duo') {
+    mode = 'p10';
+  } else if (type === 'squad') {
+    mode = 'p9';
+  }
+  // console.log(mode);
+
+
+  if(mode === 'error') {
+
+  } else {
+    // https://fortnitetracker.com/leaderboards/pc/Top1?mode=p10&country=Poland
+   request(`https://fortnitetracker.com/leaderboards/pc/Top1?mode=${mode}&country=${country}`, (err, ress, html) => {
     if(!err && ress.statusCode == 200) {
       const $ = cheerio.load(html);
       const nameTable = [];
@@ -82,6 +102,7 @@ router.post('/:country',  (req, res, next) => {
 
       const rank =  new RankByCountry({
         _id: new mongoose.Types.ObjectId(),
+        type: type,
         country: country,
         rank: top10Arr,
         query_date: today
@@ -95,7 +116,10 @@ router.post('/:country',  (req, res, next) => {
         console.log(result);
         res.status(201).json({
           message: `Selected top 10 players by country ${country}`,
-          rank: result
+          type: type,
+          country: country,
+          rank: top10Arr,
+          query_date: today
         });
       })
       .catch( err => {
@@ -108,6 +132,7 @@ router.post('/:country',  (req, res, next) => {
       });
     }
   });
+}
 });
 
 
