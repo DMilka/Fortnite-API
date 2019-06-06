@@ -11,6 +11,7 @@ const statisticsByNickname = require('./api/routes/statistics_by_nickname');
 const items = require('./api/routes/items');
 const item = require('./api/routes/item_detail');
 const version = require('./api/routes/version');
+const socials = require('./api/routes/socials');
 
 mongoose.connect(
   `mongodb+srv://admin:${process.env.MONGO_ATLAS_PW}@node-rest-shop-mklvh.mongodb.net/test?retryWrites=true&w=majority`,
@@ -45,6 +46,7 @@ app.use('/statistics_by_nickname', statisticsByNickname);
 app.use('/items', items);
 app.use('/item_detail', item);
 app.use('/version', version);
+app.use('/socials', socials);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');
