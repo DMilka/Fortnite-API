@@ -17,7 +17,7 @@ function searchPlayer(event, playerName) {
     }).then((res) => res.json())
     .then((data) => {
         sessionStorage.setItem('playerData', JSON.stringify(data));
-        window.location.href='http://127.0.0.1:5500/stats.html';
+        window.location.href='http://127.0.0.1:5500/views/stats.html';
     });
 
 }
@@ -30,6 +30,18 @@ function displayPlayer() {
         document.getElementById('error-message').classList.remove('d-none');
         return false;
     }
+
+    fetch('https://api.twitch.tv/kraken/users?login='+playerName, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        }
+    }).then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        if(data.stats.link)
+        statsNickname.innerText += ' <a href="'+data.stats.link+'">Twitch</a>';
+    });
 
     statsNickname.innerText = playerData.nickname;
     soloTable.getElementsByClassName('actual-kills')[0].innerText = playerData.solo.kills;

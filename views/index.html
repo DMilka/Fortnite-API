@@ -14,7 +14,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Fortnite API</a>
+            <a class="navbar-brand" href="/views/index.html">Fortnite API</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -22,10 +22,10 @@
             <div class="collapse navbar-collapse" id="navbarColor03">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="index.html">Top 10<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/views/index.html">Top 10<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="items.html">Items</a>
+                        <a class="nav-link" href="/views/items.html">Items</a>
                     </li>
                 </ul>
 
@@ -40,7 +40,7 @@
     <div class="container">
         <div class="filter-country mb-5">
             <h3 class="mb-3">Filtruj po kraju</h3>
-            <form class="form-inline">
+            <form id="search-country" class="form-inline">
                 <input class="form-control mr-sm-2" type="text" placeholder="Search">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
             </form>
@@ -118,13 +118,9 @@
     <script src="resources/js/searchPlayer.js"></script>
     <script src="resources/js/top10.js"></script>
     <script>
-        async function displayAllTop10() {
-            await getTop10('solo');
-            await getTop10('duo');
-            await getTop10('squad');
-        }
-
-        displayAllTop10();
+        getTop10('solo', 'poland');
+        getTop10('duo', 'poland');
+        getTop10('squad', 'poland');
     </script>
 </body>
 </html>

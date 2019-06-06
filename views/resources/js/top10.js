@@ -2,6 +2,9 @@ var soloTable = document.getElementById('top10-solo');
 var duoTable = document.getElementById('top10-duo');
 var squadTable = document.getElementById('top10-squad');
 
+var countrySearchBox = document.getElementById('search-country');
+countrySearchBox.addEventListener('submit', () => {getTop10From(event, countrySearchBox.getElementsByClassName('form-control')[0].value)});
+
 async function getUserInfo(userNickname) {
     return await fetch('http://localhost:3000/statistics_by_nickname/'+escape(userNickname), {
         method: 'POST',
@@ -99,8 +102,17 @@ async function displayUserInfo(type, playerData, index) {
     }
 }
 
-async function getTop10(type) {
-    return await fetch('http://localhost:3000/top_10_players/'+escape(type), {
+async function getTop10(type, country = null) {
+    var URL;
+
+    if( country ) {
+        URL = 'http://localhost:3000/top_10_players_by_country/'+escape(country)+'/'+escape(type);
+    } else {
+        URL = 'http://localhost:3000/top_10_players/'+escape(type);
+    }
+        
+
+    return await fetch(URL, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -119,17 +131,14 @@ async function getTop10(type) {
     });
 }
 
-function getTop10from(country) {
-    if(!country)
-        return new Error('Country is required parameter!');
+function getTop10From(event, country) {
+    event.preventDefault();
 
-    fetch('http://localhost:3000/top_10_players_by_country/'+escape(country), {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        }
-    }).then((res) => res.json())
-    .then((data) => {
-        console.log(data);
-    });
+    soloTable.innerHTML = '';
+    duoTable.innerHTML = '';
+    squadTable.innerHTML = '';
+
+    getTop10('solo', country);
+    getTop10('duo', country);
+    getTop10('squad', country);
 }
