@@ -23,6 +23,7 @@ function searchPlayer(event, playerName) {
 }
 
 function displayPlayer() {
+    sessionStorage.getItem('playerData');
     var response = JSON.parse(sessionStorage.playerData);
     var playerData = response.stats;
 
@@ -31,7 +32,7 @@ function displayPlayer() {
         return false;
     }
 
-    fetch('https://api.twitch.tv/kraken/users?login='+playerName, {
+    fetch('http://localhost:3000/socials/'+playerName, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
